@@ -98,8 +98,22 @@ echo Set FSO = CreateObject("Scripting.FileSystemObject"^)
 echo ScriptDir = FSO.GetParentFolderName(WScript.ScriptFullName^)
 echo WshShell.Run """" ^& ScriptDir ^& "\.venv\Scripts\pythonw.exe"" """ ^& ScriptDir ^& "\Deimos.py""", 0, False
 ) > Deimos.vbs
+
 echo Creating custom icon shortcut [Launch Deimos.lnk]...
-powershell -ExecutionPolicy Bypass -Command "$Shell = New-Object -ComObject WScript.Shell; $Shortcut = $Shell.CreateShortcut('%CD%\Launch Deimos.lnk'); $Shortcut.TargetPath = 'wscript.exe'; $Shortcut.Arguments = '\"%CD%\Deimos.vbs\"'; $Shortcut.WorkingDirectory = '%CD%'; $Shortcut.IconLocation = '%CD%\Deimos-logo.ico'; $Shortcut.Save()"
+(
+echo Set Shell = CreateObject("WScript.Shell"^)
+echo Set FSO = CreateObject("Scripting.FileSystemObject"^)
+echo CurrentDir = FSO.GetAbsolutePathName("."^)
+echo ShortcutPath = CurrentDir ^& "\Launch Deimos.lnk"
+echo Set Shortcut = Shell.CreateShortcut(ShortcutPath^)
+echo Shortcut.TargetPath = "wscript.exe"
+echo Shortcut.Arguments = """" ^& CurrentDir ^& "\Deimos.vbs"""
+echo Shortcut.WorkingDirectory = CurrentDir
+echo Shortcut.IconLocation = CurrentDir ^& "\Deimos-logo.ico"
+echo Shortcut.Save
+) > make_shortcut.vbs
+wscript.exe make_shortcut.vbs
+del make_shortcut.vbs
 
 echo.
 echo ====================================================
