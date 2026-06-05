@@ -89,19 +89,23 @@ if errorlevel 1 (
 echo.
 
 REM Step 6: Create Launcher
-echo Creating launcher shortcut [Deimos.bat]...
+echo Creating silent launcher shortcut [Deimos.vbs]...
+if exist Deimos.bat del Deimos.bat
+if exist Deimos.exe del Deimos.exe
 (
-echo @echo off
-echo cd /d "%%~dp0"
-echo start "" ".venv\Scripts\python.exe" "Deimos.py"
-echo exit
-) > Deimos.bat
+echo Set WshShell = CreateObject("WScript.Shell"^)
+echo Set FSO = CreateObject("Scripting.FileSystemObject"^)
+echo ScriptDir = FSO.GetParentFolderName(WScript.ScriptFullName^)
+echo WshShell.Run """" ^& ScriptDir ^& "\.venv\Scripts\pythonw.exe"" """ ^& ScriptDir ^& "\Deimos.py""", 0, False
+) > Deimos.vbs
+echo Creating custom icon shortcut [Launch Deimos.lnk]...
+powershell -ExecutionPolicy Bypass -Command "$Shell = New-Object -ComObject WScript.Shell; $Shortcut = $Shell.CreateShortcut('%CD%\Launch Deimos.lnk'); $Shortcut.TargetPath = 'wscript.exe'; $Shortcut.Arguments = '\"%CD%\Deimos.vbs\"'; $Shortcut.WorkingDirectory = '%CD%'; $Shortcut.IconLocation = '%CD%\Deimos-logo.ico'; $Shortcut.Save()"
 
 echo.
 echo ====================================================
 echo SETUP COMPLETE!
 echo You can now run the app by opening the Deimos folder
-echo and double-clicking 'Deimos.bat'.
+echo and double-clicking 'Launch Deimos'.
 echo ====================================================
 echo.
 pause
