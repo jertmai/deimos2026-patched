@@ -66,7 +66,7 @@ echo.
 REM Step 4: Clone Deimos Repo
 if not exist "Deimos" (
     echo Cloning Deimos repository...
-    git clone -b main https://github.com/Ratul-23/Deimos.git
+    git clone --depth 1 -b main https://github.com/Ratul-23/Deimos.git
     if errorlevel 1 (
         echo [ERROR] Git clone failed. Is Git installed?
         pause
