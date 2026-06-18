@@ -88,6 +88,15 @@ if errorlevel 1 (
 )
 echo.
 
+echo Installing patched wizwalker for Wizard101 compatibility...
+uv pip install git+https://github.com/LaurenzLikeThat/wizwalker --force-reinstall
+if errorlevel 1 (
+    echo [ERROR] Failed to install patched wizwalker.
+    pause
+    exit /b
+)
+echo.
+
 REM Step 6: Create Launcher
 echo Creating silent launcher shortcut [Deimos.vbs]...
 if exist Deimos.bat del Deimos.bat
